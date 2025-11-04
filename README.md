@@ -1,63 +1,112 @@
-# 📝 Prueba Técnica - Desarrollador Backend Semi-Senior
+# 🚀 NestJS Products API
 
-## ⚠️ Antes de comenzar
+API REST desarrollada con NestJS, PostgreSQL y Prisma para gestión de productos.
 
-Por favor, **lee toda la prueba completa antes de empezar**. El tiempo estimado para completarla es de **2-3 horas**, pero puedes tomar hasta **24 horas** para entregarla. La entrega se realiza a través de un **Pull Request (PR)** en este repositorio.
+## 📋 Características
 
-## 🔥 Instrucciones Generales
+- ✅ **CRUD completo** para productos
+- ✅ **Validaciones** con DTOs y class-validator
+- ✅ **Manejo de excepciones** personalizado
+- ✅ **Pruebas unitarias** con Jest
+- ✅ **Base de datos PostgreSQL** con Prisma ORM
+- ✅ **Dockerización** lista para producción
 
-1. **Haz un fork** de este repositorio en tu cuenta de GitHub.
-2. Crea una nueva rama con tu nombre o un identificador único:
-   ```bash
-   git checkout -b tu-nombre
-   ```
-3. Desarrolla tu solución en la rama creada.
-4. Una vez finalizado, sube tus cambios a tu repositorio y abre un **Pull Request (PR)** hacia este repositorio.
-5. **Asegúrate de incluir una breve descripción en el PR** explicando tu enfoque y decisiones técnicas.
-6. Puedes usar **IA o cualquier recurso** que consideres necesario, pero ten en cuenta que podrías ser requerido para sustentar tu solución.
+## 🛠️ Tecnologías
+- **Framework**: NestJS 11
+- **Base de datos**: PostgreSQL 15
+- **ORM**: Prisma 6
+- **Validación**: class-validator
+- **Testing**: Jest
+- **Containerización**: Docker
 
-## 📌 Requerimientos
+## Project setup
 
-### 1️⃣ Implementación de API en NestJS
+```bash
+$ npm install
+```
 
-- Crea un servicio en **NestJS** que exponga endpoints para manejar entidades en **PostgreSQL** usando el ORM de tu preferencia (TypeORM o Prisma).
-- Debe incluir CRUD para una entidad llamada `Productos` con los siguientes campos:
-  - `id` (UUID, PK)
-  - `nombre` (string)
-  - `precio` (decimal)
-  - `stock` (entero)
+## Compile and run the project
 
-### 2️⃣ Seguridad y Buenas Prácticas
+```bash
+# development
+$ npm run start
 
-- Implementa **validaciones** con DTOs en los endpoints.
-- Manejo adecuado de **excepciones**.
-- Configuración de variables de entorno con `.env`.
+# watch mode
+$ npm run start:dev
 
-### 3️⃣ Pruebas Unitarias
+# production mode
+$ npm run start:prod
+```
 
-- Escribe pruebas unitarias para al menos un servicio usando **Jest**.
+## 🗄️ Base de Datos
 
-### 4️⃣ Conocimientos en AWS (Opcional, suma puntos)
+### Configuración inicial
+```bash
+# Configurar variables de entorno
+cp .env.example .env
 
-- Describe cómo desplegarías esta API en **AWS ECS + RDS**.
-- Explica brevemente cómo manejarías secretos con **AWS Secrets Manager**.
-- Opcionalmente, agrega un pequeño **Terraform** para crear el RDS.
+# Ejecutar migraciones
+npx prisma migrate dev
 
-### 5️⃣ CI/CD con GitHub Actions y Terraform (Opcional, suma puntos)
+# Generar cliente Prisma
+npx prisma generate
+```
 
-- Crea un workflow en **GitHub Actions** para ejecutar pruebas automáticamente en cada `push` o `PR`.
-- Opcionalmente, agrega un paso en el pipeline para desplegar la API en AWS usando **Terraform**.
+### Modelo de datos
+```prisma
+model Product {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  price     Decimal
+  stock     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
 
-## ⏳ Tiempo Estimado
+## 🧪 Pruebas
 
-Queremos que tengas el tiempo suficiente para hacerlo bien, pero sin presionarte demasiado. Lo ideal es que puedas completarlo en unas **2-3 horas**, pero puedes tomar hasta **24 horas** para entregarlo.
+```bash
+# Pruebas unitarias
+npm test
 
-## 📬 Entrega
+# Pruebas específicas
+npm test -- products.service.spec.ts
 
-- Haz un **Pull Request** con tu código.
-- Asegúrate de que los endpoints sean funcionales.
-- Si tienes comentarios o explicaciones, agrégalas en el `README.md` de tu fork.
+# Modo watch
+npm run test:watch
 
----
+# Cobertura de código
+npm run test:cov
+```
 
-¡Buena suerte y esperamos ver tu solución! 🚀
+## 📡 API Endpoints
+
+### Productos
+- `GET /products` - Listar todos los productos
+- `GET /products/:id` - Obtener producto por ID
+- `POST /products` - Crear nuevo producto
+- `PUT /products/:id` - Actualizar producto
+- `DELETE /products/:id` - Eliminar producto
+
+
+### Ejemplo de uso:
+```bash
+# Crear producto
+curl -X POST http://localhost:3000/products \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Laptop", "price": 999.99, "stock": 10}'
+
+# Listar productos
+curl http://localhost:3000/products
+```
+
+## 🐳 Docker
+
+```bash
+# Construir imagen
+docker build -t nestjs-api .
+
+# Ejecutar contenedor
+docker run -p 3000:3000 nestjs-api
+```

@@ -1,0 +1,23 @@
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: prueba-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: prueba_db
+      POSTGRES_USER: prueba_user
+      POSTGRES_PASSWORD: prueba_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - prueba-network
+volumes:
+  postgres_data:
+
+networks:
+  prueba-network:
+    driver: bridge
